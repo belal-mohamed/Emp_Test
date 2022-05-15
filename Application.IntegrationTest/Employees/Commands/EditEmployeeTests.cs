@@ -1,7 +1,9 @@
-﻿using Employees.src.Application.Employees.Commands.CreateEmployee;
+﻿using DeepEqual.Syntax;
+using Employees.src.Application.Employees.Commands.CreateEmployee;
 using Employees.src.Application.Employees.Commands.EditEmployee;
 using Employees.src.Application.Exceptions;
 using Employees.src.Domain.Entities;
+using Employees.src.Domain.ValueObjects;
 using FluentAssertions;
 using NUnit.Framework;
 using System;
@@ -19,19 +21,23 @@ namespace Application.IntegrationTest.Employees.Commands
         [Test]
         public async Task ShouldRequireValidEmployeeId()
         {
-            EditEmployeeVm emp = new EditEmployeeVm()
+            Employee emp = new Employee()
             {
                 Id = 100,
-                City = "bb",
-                Country = "dd",
                 Name = "sr",
-                Street = "fre",
-                State = "rere"
+                Address = new Address 
+                {
+                    City = "bb",
+                    Country = "dd",
+                    Street = "fre",
+                    State = "rere"
+                
+                }
             };
 
             var editEmployeeCommand = new EditEmployeeCommand()
             {
-                EmployeeVm = emp
+                Employee = emp
             };
 
             await FluentActions.Invoking(() => SendAsync(editEmployeeCommand))
@@ -41,48 +47,61 @@ namespace Application.IntegrationTest.Employees.Commands
         [Test]
         public async Task ShouldEditEmployee()
         {
-            var CreateEmpVm = new CreateEmployeeVm()
+
+            var empAddress = new Address()
             {
                 City = "Alexandria",
                 State = "Alexandria",
-                Name = "Belal",
                 Country = "Egypt",
                 Street = "most4areen"
             };
+
+            var emp = new Employee()
+            {
+                Name = "Belal",
+                Address = empAddress
+            };
+
             var createEmployeeCommand = new CreateEmployeeCommand()
             {
-                EmployeeVm = CreateEmpVm
+                Employee = emp
             };
             var empId = await SendAsync(createEmployeeCommand);
 
 
 
 
-            var editEmpVm = new EditEmployeeVm()
+            var editEmp = new Employee()
             {
                 Id = empId,
-                City = "ss",
-                State = "ss",
                 Name = "ss",
-                Country = "ss",
-                Street = "ss"
+                Address = new Address()
+                {
+                    City = "ss",
+                    State = "ss",
+                    Country = "ss",
+                    Street = "ss"
+                }
             };
 
             await SendAsync(new EditEmployeeCommand()
             {
-                EmployeeVm = editEmpVm
+                Employee = editEmp
             });
             var editedEmp = await FindAsync<Employee>(empId);
 
 
+            //editedEmp.ShouldDeepEqual(editEmp);
 
+            bool result = editedEmp.IsDeepEqual(editEmp);
 
+            result.Should().BeTrue();
 
-            editedEmp.Name.Should().Be(editEmpVm.Name);
-            editedEmp.Address.State.Should().Be(editEmpVm.State);
-            editedEmp.Address.City.Should().Be(editEmpVm.City);
-            editedEmp.Address.Country.Should().Be(editEmpVm.Country);
-            editedEmp.Address.Street.Should().Be(editEmpVm.Street);
+            //editedEmp.Name.Should().Be(editEmpVm.Name);
+            //editedEmp.Address.State.Should().Be(editEmpVm.State);
+            //editedEmp.Address.City.Should().Be(editEmpVm.City);
+            //editedEmp.Address.Country.Should().Be(editEmpVm.Country);
+            //editedEmp.Address.Street.Should().Be(editEmpVm.Street);
 
         }
     }

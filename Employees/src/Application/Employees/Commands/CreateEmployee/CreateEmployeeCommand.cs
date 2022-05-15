@@ -13,7 +13,9 @@ namespace Employees.src.Application.Employees.Commands.CreateEmployee
 {
     public class CreateEmployeeCommand : IRequest<int>
     {
-        public CreateEmployeeVm EmployeeVm { get; set; }
+        //public CreateEmployeeVm EmployeeVm { get; set; }
+
+        public Employee Employee { get; set; }
     }
 
     public class CreateEmployeeCommandHandler : IRequestHandler<CreateEmployeeCommand,int>
@@ -29,17 +31,17 @@ namespace Employees.src.Application.Employees.Commands.CreateEmployee
         public async Task<int> Handle(CreateEmployeeCommand request, CancellationToken cancellationToken)
         {
 
-            var empVm = request.EmployeeVm;
+            //var empVm = request.EmployeeVm;
 
-            var employee = _mapper.Map<Employee>(empVm);
+            //var employee = _mapper.Map<Employee>(empVm);
 
-            employee.Address = new Domain.ValueObjects.Address(empVm.Street,empVm.City,empVm.State,empVm.Country);
+            //employee.Address = new Domain.ValueObjects.Address(empVm.Street,empVm.City,empVm.State,empVm.Country);
 
-            _context.Employees.Add(employee);
+            _context.Employees.Add(request.Employee);
 
             await _context.SaveChangesAsync(cancellationToken);
 
-            return employee.Id; 
+            return request.Employee.Id; 
         }
     }
 }

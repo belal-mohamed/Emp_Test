@@ -68,6 +68,8 @@ namespace Employees
                 });
             });
 
+
+            // fluent validation pipeline
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
         }
 

@@ -11,26 +11,59 @@ namespace Employees.src.Application.Employees.Commands.CreateEmployee
         public CreateEmployeeCommandValidator()
         {
 
-            RuleFor(s => s.EmployeeVm)
+
+            RuleFor(s => s.Employee)
                 .NotNull()
                 .WithMessage("Employee City Is Required");
 
-            RuleFor(s => s.EmployeeVm.City)
+            RuleFor(s => s.Employee.Address)
+    .NotNull()
+    .WithMessage("Employee City Is Required");
+
+            RuleFor(s => s.Employee.Address.City)
                 .NotEmpty()
                 .WithMessage("Employee City Is Required");
 
-            RuleFor(s => s.EmployeeVm.Country)
+            RuleFor(s => s.Employee.Address.Country)
                 .NotEmpty()
                 .WithMessage("Employee Country Is Required");
 
-            RuleFor(s => s.EmployeeVm.Name)
+            RuleFor(s => s.Employee.Name)
                 .NotEmpty()
                 .WithMessage("Employee Name Is Required")
                 .MaximumLength(60);
 
-            RuleFor(s => s.EmployeeVm.Street)
+            RuleFor(s => s.Employee.Address.Street)
                 .NotEmpty()
                 .WithMessage("Employee Street Is Required");
+
+
+
+
+
+            //RuleFor(s => s.EmployeeVm)
+            //    .NotNull()
+            //    .WithMessage("Employee City Is Required");
+
+            //RuleFor(s => s.EmployeeVm.City)
+            //    .NotEmpty()
+            //    .WithMessage("Employee City Is Required");
+
+            //RuleFor(s => s.EmployeeVm.Country)
+            //    .NotEmpty()
+            //    .WithMessage("Employee Country Is Required");
+
+            //RuleFor(s => s.EmployeeVm.Name)
+            //    .NotEmpty()
+            //    .WithMessage("Employee Name Is Required")
+            //    .MaximumLength(60);
+
+            //RuleFor(s => s.EmployeeVm.Street)
+            //    .NotEmpty()
+            //    .WithMessage("Employee Street Is Required");
+
+
+
 
 
         }

@@ -13,7 +13,8 @@ namespace Employees.src.Application.Employees.Commands.EditEmployee
 {
     public class EditEmployeeCommand : IRequest<int>
     {
-        public EditEmployeeVm EmployeeVm { get; set; }
+        //public EditEmployeeVm EmployeeVm { get; set; }
+        public Employee Employee { get; set; }
     }
 
     public class EditEmployeeCommandHandler : IRequestHandler<EditEmployeeCommand,int>
@@ -29,18 +30,21 @@ namespace Employees.src.Application.Employees.Commands.EditEmployee
         public async Task<int> Handle(EditEmployeeCommand request, CancellationToken cancellationToken)
         {
 
-            var empVm = request.EmployeeVm;
 
-            var employee = await _context.Employees.FindAsync(empVm.Id);
+            var employee = await _context.Employees.FindAsync(request.Employee.Id);
 
             if (employee == null)
             {
-                throw new NotFoundException(nameof(employee), request.EmployeeVm.Id);
+                throw new NotFoundException(nameof(employee), request.Employee.Id);
             }
 
-            _mapper.Map(request.EmployeeVm, employee);
+            //_mapper.Map(request.EmployeeVm, employee);
 
-            employee.Address = new Domain.ValueObjects.Address(empVm.Street, empVm.City, empVm.State, empVm.Country);
+            //employee.Address = new Domain.ValueObjects.Address(empVm.Street, empVm.City, empVm.State, empVm.Country);
+
+            _mapper.Map(request.Employee, employee);
+
+            //employee = request.Employee;
 
             await _context.SaveChangesAsync(cancellationToken);
 

@@ -1,5 +1,6 @@
 ﻿using Employees.src.Application.Employees.Commands.CreateEmployee;
 using Employees.src.Domain.Entities;
+using Employees.src.Domain.ValueObjects;
 using FluentAssertions;
 using NUnit.Framework;
 using System;
@@ -19,7 +20,14 @@ namespace Application.IntegrationTest.Employees.Commands
         {
             var createEmployeeCommand = new CreateEmployeeCommand()
             {
-                EmployeeVm = new CreateEmployeeVm()
+                Employee = new Employee()
+                {
+                    Name = "belal",
+                    Address = new Address()
+                    {
+                        City = "ddd"
+                    }
+                }
             };
 
 
@@ -31,19 +39,23 @@ namespace Application.IntegrationTest.Employees.Commands
         [Test]
         public async Task ShouldCreateEmployee()
         {
-            var empVm = new CreateEmployeeVm()
+            var empAddress = new Address()
             {
                 City = "Alexandria",
                 State = "Alexandria",
-                Name = "Belal",
                 Country = "Egypt",
                 Street = "most4areen"
             };
 
+            var emp = new Employee()
+            {
+                Name = "Belal",
+                Address = empAddress
+            };
 
             var createEmployeeCommand = new CreateEmployeeCommand()
             {
-                EmployeeVm = empVm
+                Employee = emp
             };
 
             var request = await SendAsync(createEmployeeCommand);
